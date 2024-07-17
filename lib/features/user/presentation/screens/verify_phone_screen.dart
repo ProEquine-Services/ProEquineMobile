@@ -1,32 +1,42 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:proequine/core/utils/extensions.dart';
 import 'package:proequine/core/widgets/loading_widget.dart';
-import 'package:proequine/features/user/data/register_request_model.dart';
+import 'package:proequine/core/widgets/phone_number_field_widget.dart';
 import 'package:proequine/features/user/domain/user_cubit.dart';
 import 'package:proequine/features/user/presentation/screens/verification_screen.dart';
-
-
-import '../../../../core/constants/colors/app_colors.dart';
 import '../../../../core/constants/constants.dart';
 import '../../../../core/constants/thems/app_styles.dart';
+
 import '../../../../core/utils/Printer.dart';
 import '../../../../core/utils/rebi_message.dart';
-import '../../../../core/utils/validator.dart';
-import '../../../../core/widgets/custom_logo_widget.dart';
+import '../../../../core/utils/sharedpreferences/SharedPreferencesHelper.dart';
 import '../../../../core/widgets/rebi_button.dart';
-import '../../../../core/widgets/rebi_input.dart';
+import '../../data/register_request_model.dart';
+import '../../data/send_verification_request_model.dart';
 import '../widgets/register_header.dart';
 
 class VerifyPhoneScreen extends StatefulWidget {
-  String? fullName;
+  String? firstName;
+  String? lastName;
+  String? middleName;
   String? dob;
   String? email;
   String? password;
+  String? confirmPassword;
+  String? gender;
+  String? nationality;
 
   VerifyPhoneScreen(
-      {super.key, this.fullName, this.dob, this.email, this.password});
+      {super.key,
+      this.firstName,
+      this.middleName,
+      this.lastName,
+      this.dob,
+      this.email,
+      this.password,
+      this.confirmPassword,
+      this.gender,
+      this.nationality});
 
   @override
   State<VerifyPhoneScreen> createState() => _VerifyPhoneScreenState();
@@ -37,22 +47,21 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
   late final TextEditingController _countryCode;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final UserCubit cubit = UserCubit();
-  String? dob='';
-
+  String? dob = '';
+  String? phoneNumber;
 
   @override
   void initState() {
     _phone = TextEditingController();
     _countryCode = TextEditingController(text: "+971");
     super.initState();
-
   }
-
 
   @override
   void dispose() {
     _phone.dispose();
     _countryCode.dispose();
+    cubit.close();
     super.dispose();
   }
 
@@ -65,6 +74,7 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
           builder: (context, constraint) {
             return Form(
               key: _formKey,
+              autovalidateMode: AutovalidateMode.disabled,
               child: SingleChildScrollView(
                 child: ConstrainedBox(
                   constraints: BoxConstraints(minHeight: constraint.maxHeight),
@@ -72,113 +82,94 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
                     child: Column(
                       children: [
                         RegistrationHeader(isThereBackButton: true),
-                        const CustomLogoWidget(),
-                        SizedBox(height: 40,),
+                        Spacer(),
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: kPadding),
+                          padding:
+                              const EdgeInsets.symmetric(horizontal: kPadding),
                           child: Column(
                             children: [
                               Align(
                                 alignment: Alignment.centerLeft,
-                                child: Text("Verify Phone Number",
-                                    style: AppStyles.registrationTitle),
+                                child: Text("Mobile number",
+                                    style: AppStyles.mainTitle),
                               ),
                               const SizedBox(
                                 height: 10,
                               ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 10),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      flex: 1,
-                                      child: RebiInput(
-                                        hintText: 'CC'.tra,
-                                        controller: _countryCode,
-                                        keyboardType: TextInputType.number,
-                                        textInputAction: TextInputAction.done,
-                                        autoValidateMode:
-                                        AutovalidateMode.onUserInteraction,
-                                        isOptional: false,
-                                        color: AppColors.formsLabel,
-                                        readOnly: false,
-                                        contentPadding: const EdgeInsets.symmetric(
-                                            horizontal: 20, vertical: 13),
-                                        obscureText: false,
-                                        validator: (value) {
-                                          return Validator.countryCodeValidator(
-                                              _countryCode.text);
-                                        },
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
-                                    Expanded(
-                                      flex: 3,
-                                      child: RebiInput(
-                                        hintText: 'Phone'.tra,
-                                        controller: _phone,
-                                        keyboardType: TextInputType.number,
-                                        textInputAction: TextInputAction.done,
-                                        autoValidateMode:
-                                        AutovalidateMode.onUserInteraction,
-                                        isOptional: false,
-                                        color: AppColors.formsLabel,
-                                        readOnly: false,
-                                        contentPadding: const EdgeInsets.symmetric(
-                                            horizontal: 20, vertical: 13),
-                                        obscureText: false,
-                                        validator: (value) {
-                                          return Validator.phoneValidator(
-                                              _phone.text);
-                                        },
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                    "For account verification and receive timely notifications this helps us ensure your account's safety while keeping you informed",
+                                    style: AppStyles.descriptions),
                               ),
-
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              PhoneNumberFieldWidget(
+                                  countryCode: _countryCode,
+                                  phoneNumber: _phone),
                               Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 20),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 20),
                                 child: BlocConsumer<UserCubit, UserState>(
                                   bloc: cubit,
                                   builder: (context, state) {
-
                                     if (state is RegisterLoading) {
-                                      return LoadingCircularWidget();
+                                      return const LoadingCircularWidget();
                                     }
                                     return RebiButton(
                                         onPressed: () {
-                                          if (_formKey.currentState!.validate()) {
+                                          phoneNumber =
+                                              _countryCode.text + _phone.text;
+                                          Print(phoneNumber);
+                                          if (_formKey.currentState!
+                                              .validate()) {
+                                            FocusManager.instance.primaryFocus
+                                                ?.unfocus();
                                             _sendRegisterData(
-                                                email: widget.email,
-                                                name: widget.fullName,
-                                                phone:
-                                                _countryCode.text + _phone.text,
-                                                password: widget.password,
-                                                dob: widget.dob);
+                                              email: widget.email,
+                                              phone: _countryCode.text +
+                                                  _phone.text,
+                                              firstName: widget.firstName,
+                                              lastName: widget.lastName,
+                                              middleName: widget.middleName,
+                                              gender: widget.gender,
+                                              nationality: widget.nationality,
+                                              password: widget.password,
+                                              confirmPassword:
+                                                  widget.confirmPassword,
+                                              dob: widget.dob,
+                                            );
+                                            // cubit.sendVerificationCode(
+                                            //     SendVerificationRequestModel(
+                                            //   phoneNumber: _countryCode.text +
+                                            //       _phone.text,
+                                            // ));
                                           } else {}
                                         },
-                                        backgroundColor: AppColors.white,
-                                        child: const Text("Sign up"));
+                                        child:  Text("Verify", style: AppStyles.buttonStyle,));
                                   },
                                   listener: (context, state) {
                                     if (state is RegisterSuccessful) {
-                                      Print(state.message);
+                                      AppSharedPreferences.inputPhoneNumber =
+                                          _countryCode.text + _phone.text;
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
                                                   VerificationScreen()));
-                                    } else if (state is RegisterError) {
-                                      RebiMessage.error(msg: state.message!);
+                                    } else if (state is RegisterError){
+                                      RebiMessage.error(msg: state.message!, context: context);
+                                    }else if (state is SendVerificationError) {
+                                      RebiMessage.error(
+                                          msg: state.message!,
+                                          context: context);
                                     }
                                   },
                                 ),
                               ),
                               const SizedBox(
-                                height: 40,
+                                height: 20,
                               ),
                             ],
                           ),
@@ -197,16 +188,27 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
 
   _sendRegisterData(
       {String? email,
-      String? name,
+      String? firstName,
+      String? middleName,
+      String? lastName,
       String? phone,
+      String? gender,
+      String? nationality,
       String? password,
+      String? confirmPassword,
       String? dob}) {
     return cubit.register(RegisterRequestModel(
       email: email,
-      fullName: name,
+      firstName: firstName,
+      middleName: middleName,
+      lastName: lastName,
       password: password,
+      dateOfBirth: dob,
+      confirmPassword: confirmPassword,
+      gender: gender,
+      nationality: nationality,
       phoneNumber: phone,
-      dob: dob,
+      // dob: dob,
     ));
   }
 }

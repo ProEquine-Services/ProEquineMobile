@@ -5,11 +5,11 @@ import '../../../../core/constants/colors/app_colors.dart';
 import '../../../../core/constants/images/app_images.dart';
 
 class PendingBookingItem extends StatelessWidget {
-  String? type;
+  final String? type;
   final String? bookingId;
-  String? date;
-  String? transport;
-   PendingBookingItem({
+  final String? date;
+  final String? transport;
+   const PendingBookingItem({super.key,
     this.type,
     this.bookingId,
     this.date,
@@ -48,7 +48,7 @@ class PendingBookingItem extends StatelessWidget {
                     fontWeight: FontWeight.w700,
                   ),
                 ),
-                Spacer(),
+                const Spacer(),
                 Text(bookingId!),
               ],
             ),
@@ -71,7 +71,7 @@ class PendingBookingItem extends StatelessWidget {
                             child: SizedBox(
                               child: SvgPicture.asset(
                                 AppIcons.date,
-                                color: AppColors.eventText,
+                                color: AppColors.grey,
                               ),
                             ),
                           ),
@@ -84,7 +84,7 @@ class PendingBookingItem extends StatelessWidget {
                               date!,
                               style:const TextStyle(
                                   fontSize: 12,
-                                  color: AppColors.eventText),
+                                  color: AppColors.grey),
                             ),
                           ),
                         ],
@@ -96,11 +96,9 @@ class PendingBookingItem extends StatelessWidget {
                         children: [
                           Expanded(
                             flex: 1,
-                            child: Container(
-                              child:  Image.asset(
-                                AppImages.greyTrans,
+                            child: SvgPicture.asset(
+                              AppIcons.transportIcon,
 
-                              ),
                             ),
                           ),
                           const SizedBox(
@@ -110,7 +108,7 @@ class PendingBookingItem extends StatelessWidget {
                               flex: 13,
                               child: Text(transport!,
                                   style: const TextStyle(
-                                    color: AppColors.eventText,
+                                    color: AppColors.grey,
                                     fontSize: 12,
                                   )))
                         ],

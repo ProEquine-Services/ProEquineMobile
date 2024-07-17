@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:sizer/sizer.dart';
 
 import '../../../../core/constants/colors/app_colors.dart';
 
 class ShippingWidget extends StatelessWidget {
-  String? image;
-  String? title;
-  Function? onTap;
+  final String? image;
+  final String? title;
+  final Function? onTap;
 
-  ShippingWidget({this.image, this.title, this.onTap});
+  const ShippingWidget({super.key, this.image, this.title, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -18,14 +19,43 @@ class ShippingWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            height: 177.0,
-            width: 156,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Image.asset(image!),
-          ),
+          // Stack(
+          //   children:  [
+          //     ClipRRect(
+          //       borderRadius: BorderRadius.circular(8),
+          //       // Set your desired border radius here
+          //       child: ColorFiltered(
+          //         colorFilter: ColorFilter.mode(
+          //             Colors.black.withOpacity(0.6), BlendMode.darken),
+          //         child:
+      Container(
+                    height: 22.75.h,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Image.asset(
+                      image!,
+                      width: 42.16.w,
+                      fit: BoxFit.fill,
+                    ),
+                  ),
+                // ),
+              // ),
+              //  const Positioned.fill(
+              //   child: Align(
+              //  alignment: Alignment.center,child: Text(
+              //     'Coming Soon ',
+              //     style: TextStyle(
+              //       color: AppColors.whiteLight,
+              //       fontSize: 14,
+              //       fontFamily: 'notosan',
+              //       fontWeight: FontWeight.w500,
+              //     ),
+              //   ),
+              // ),
+              //  ),
+          //   ],
+          // ),
           const SizedBox(
             height: 10,
           ),
@@ -33,7 +63,6 @@ class ShippingWidget extends StatelessWidget {
             title!,
             textAlign: TextAlign.start,
             style: const TextStyle(
-                color: AppColors.white,
                 fontFamily: 'notosan',
                 fontWeight: FontWeight.w400,
                 fontSize: 15.0),

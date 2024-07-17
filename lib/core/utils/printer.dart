@@ -3,8 +3,6 @@ import 'package:logger/logger.dart';
 class Print {
   Print(object) {
     _logger.i(object);
-    // print(object);
-    // _logger.d(object.toString());
   }
 
   static final _logger = Logger(

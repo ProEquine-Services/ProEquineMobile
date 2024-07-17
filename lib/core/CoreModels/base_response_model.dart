@@ -25,7 +25,7 @@ class BaseResponseModel<Result extends BaseResultModel> {
         success = false;
       }
     } else {
-      success = json['succeeded'];
+      success = json['success'];
       message = (json['message'] != null ? Message(content: json['message']) : null);
 
       if (fromJson != null) {

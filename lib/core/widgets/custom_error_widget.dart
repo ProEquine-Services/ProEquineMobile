@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:proequine/core/constants/thems/app_styles.dart';
 import 'package:proequine/core/utils/extensions.dart';
 import 'package:proequine/core/widgets/rebi_button.dart';
 import 'package:sizer/sizer.dart';
@@ -6,14 +8,14 @@ import 'package:sizer/sizer.dart';
 import '../constants/images/app_images.dart';
 
 class CustomErrorWidget extends StatelessWidget {
-  const CustomErrorWidget({
+  CustomErrorWidget({
     Key? key,
-    required this.errorMessage,
+    this.errorMessage,
     required this.onRetry,
     this.buttonText,
   }) : super(key: key);
 
-  final String errorMessage;
+   String? errorMessage;
   final Function onRetry;
   final String? buttonText;
 
@@ -25,21 +27,26 @@ class CustomErrorWidget extends StatelessWidget {
         vertical: 50.0,
       ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           //TODO: replace with error image
-          Image.asset(
-            AppImages.error,
-            height: 20.h,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 30),
+            child: Image.asset(
+              AppImages.error,
+              height: 18.h,
+            ),
           ),
+          const SizedBox(height: 40,),
 
-          Text(
-            errorMessage,
+          const Text(
+            'Oops! Something went wrong. Please try again.',
             textAlign: TextAlign.center,
-            style: const TextStyle(
+            style: TextStyle(
               fontWeight: FontWeight.bold,
             ),
           ),
+          const SizedBox(height: 20,),
 
           RebiButton(
             onPressed: () {
@@ -47,6 +54,7 @@ class CustomErrorWidget extends StatelessWidget {
             },
             child: Text(
               buttonText ?? 'Try again'.tra,
+              style: AppStyles.buttonStyle,
             ),
           ),
         ],

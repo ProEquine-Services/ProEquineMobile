@@ -1,1 +1,0 @@
-readme_todo: here I will add GeneralErrorWidget

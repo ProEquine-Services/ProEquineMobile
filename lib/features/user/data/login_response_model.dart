@@ -3,22 +3,40 @@ import 'package:proequine/core/CoreModels/base_result_model.dart';
 class LoginResponseModel extends BaseResultModel {
   bool? isEmailVerified;
   bool? isPhoneNumberVerified;
+  bool? isTypeSelected;
+  String? phoneNumber;
   String? accessToken;
   RefreshToken? refreshToken;
+  String? userId;
+  bool? isChooseType;
+  bool? isChooseMainStable;
+  int? personId;
 
   LoginResponseModel(
       {this.isEmailVerified,
         this.isPhoneNumberVerified,
+        this.isTypeSelected,
+        this.phoneNumber,
         this.accessToken,
-        this.refreshToken});
+        this.refreshToken,
+        this.userId,
+        this.isChooseType,
+        this.isChooseMainStable,
+        this.personId});
 
   LoginResponseModel.fromJson(Map<String, dynamic> json) {
     isEmailVerified = json['isEmailVerified'];
     isPhoneNumberVerified = json['isPhoneNumberVerified'];
+    isTypeSelected = json['isTypeSelected'];
+    phoneNumber = json['phoneNumber'];
     accessToken = json['accessToken'];
     refreshToken = json['refreshToken'] != null
         ? RefreshToken.fromJson(json['refreshToken'])
         : null;
+    userId = json['userId'];
+    isChooseType = json['isChooseType'];
+    isChooseMainStable = json['isChooseMainStable'];
+    personId = json['personId'];
   }
 
   @override
@@ -26,16 +44,21 @@ class LoginResponseModel extends BaseResultModel {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['isEmailVerified'] = isEmailVerified;
     data['isPhoneNumberVerified'] = isPhoneNumberVerified;
+    data['isTypeSelected'] = isTypeSelected;
+    data['phoneNumber'] = phoneNumber;
     data['accessToken'] = accessToken;
     if (refreshToken != null) {
       data['refreshToken'] = refreshToken!.toJson();
     }
+    data['userId'] = userId;
+    data['isChooseType'] = isChooseType;
+    data['isChooseMainStable'] = isChooseMainStable;
+    data['personId'] = personId;
     return data;
   }
 }
 
 class RefreshToken {
-  int? id;
   String? userId;
   String? token;
   String? expires;
@@ -43,15 +66,9 @@ class RefreshToken {
   bool? isActive;
 
   RefreshToken(
-      {this.id,
-        this.userId,
-        this.token,
-        this.expires,
-        this.isExpired,
-        this.isActive});
+      {this.userId, this.token, this.expires, this.isExpired, this.isActive});
 
   RefreshToken.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
     userId = json['userId'];
     token = json['token'];
     expires = json['expires'];
@@ -61,7 +78,6 @@ class RefreshToken {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
     data['userId'] = userId;
     data['token'] = token;
     data['expires'] = expires;

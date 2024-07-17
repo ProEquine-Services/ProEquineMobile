@@ -1,5 +1,6 @@
-import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
+
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:proequine/features/events/data/events_response_model.dart';
 import 'package:proequine/features/events/domain/repo/events_repository.dart';
 

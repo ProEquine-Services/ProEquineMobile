@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
+import '../constants/colors/app_colors.dart';
+
 const _shimmerGradient = LinearGradient(
   colors: [
-    Color(0x8024393C),
-    Color(0xFFF4F4F4),
-    Color(0x8024393C),
+    AppColors.borderColor,
+    AppColors.backgroundColorLight,
+    AppColors.borderColor
   ],
   stops: [
     0.1,
@@ -64,12 +66,8 @@ class _ShimmerLoadingState extends State<ShimmerLoading> {
     if (!widget.isLoading) {
       return widget.child;
     }
-
-    // Collect ancestor shimmer information.
     final shimmer = Shimmer.of(context)!;
     if (!shimmer.isSized) {
-      // The ancestor Shimmer widget isn’t laid
-      // out yet. Return an empty box.
       return const SizedBox();
     }
 
@@ -105,7 +103,6 @@ class Shimmer extends StatefulWidget {
 
   const Shimmer({
     super.key,
-    // required this.linearGradient,
     this.child,
   });
 

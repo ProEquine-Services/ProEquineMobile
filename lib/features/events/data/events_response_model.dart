@@ -17,6 +17,7 @@ class EventsResponseModel extends BaseResultModel {
     place = json['place'];
   }
 
+  @override
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;

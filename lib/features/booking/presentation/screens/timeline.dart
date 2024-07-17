@@ -8,16 +8,15 @@ import '../widgets/order_status_box.dart';
 import '../widgets/order_tracking_dots.dart';
 
 class BookingTrack extends StatelessWidget {
-  String? image;
-  String? type;
+ final String? image;
+ final String? type;
   final String? bookingId;
-  String? date;
-  String? transport;
-  String? transportType;
-  int? horsesCount;
+ final String? date;
+ final String? transport;
+ final String? transportType;
+ final int? horsesCount;
 
-  BookingTrack({
-    Key? key,
+  const BookingTrack({super.key,
     this.image,
     this.type,
     this.bookingId,
@@ -41,11 +40,11 @@ class BookingTrack extends StatelessWidget {
                     height: 40.0.h,
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      color: const Color(0xff000000),
+                      color: AppColors.shapeLightMode,
                       image: DecorationImage(
                         image: AssetImage(image!),
                         colorFilter: ColorFilter.mode(
-                            Colors.black.withOpacity(0.45), BlendMode.dstATop),
+                            AppColors.shapeLightMode, BlendMode.dstATop),
                       ),
                     ),
                   ),
@@ -83,7 +82,7 @@ class BookingTrack extends StatelessWidget {
                                 fontSize: 18.0.sp,
                                 fontWeight: FontWeight.w500),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 60,
                           ),
                         ],
@@ -98,12 +97,13 @@ class BookingTrack extends StatelessWidget {
                               children: [
                                 Container(
                                   color:AppColors.grey,
-                                  padding: EdgeInsets.symmetric(horizontal: 7,vertical: 5),
+                                  padding: const EdgeInsets.symmetric(horizontal: 7,vertical: 5),
                                   child: Text(
                                     type!,
                                     style: const TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w700,
+                                      color: Colors.white
                                     ),
                                   ),
                                 ),
@@ -130,7 +130,7 @@ class BookingTrack extends StatelessWidget {
                                             child: SizedBox(
                                               child: SvgPicture.asset(
                                                 AppIcons.date,
-                                                color: AppColors.eventText,
+                                                color: AppColors.grey,
                                                 height: 30,
                                                 width: 20,
                                               ),
@@ -145,7 +145,7 @@ class BookingTrack extends StatelessWidget {
                                               date!,
                                               style: const TextStyle(
                                                   fontSize: 14,
-                                                  color: AppColors.eventText),
+                                                  color: AppColors.grey),
                                             ),
                                           ),
                                         ],
@@ -157,11 +157,10 @@ class BookingTrack extends StatelessWidget {
                                         children: [
                                           Expanded(
                                             flex: 2,
-                                            child: Container(
-                                              child: Image.asset(
-                                                AppImages.greyTrans,
-                                                scale: 2,
-                                              ),
+                                            child: SvgPicture.asset(
+                                              AppIcons.transportIcon,
+
+
                                             ),
                                           ),
                                           const SizedBox(
@@ -171,7 +170,7 @@ class BookingTrack extends StatelessWidget {
                                               flex: 13,
                                               child: Text(transport!,
                                                   style: const TextStyle(
-                                                    color: AppColors.eventText,
+                                                    color: AppColors.grey,
                                                     fontSize: 14,
                                                   )))
                                         ],
@@ -183,12 +182,10 @@ class BookingTrack extends StatelessWidget {
                                         children: [
                                           Expanded(
                                             flex: 2,
-                                            child: Container(
-                                              child: SvgPicture.asset(
-                                                AppIcons.horse,
-                                                color: AppColors.eventText,
-                                                height: 20,
-                                              ),
+                                            child: SvgPicture.asset(
+                                              AppIcons.horse,
+                                              color: AppColors.grey,
+                                              height: 20,
                                             ),
                                           ),
                                           const SizedBox(
@@ -200,7 +197,7 @@ class BookingTrack extends StatelessWidget {
                                               horsesCount.toString(),
                                               style: const TextStyle(
                                                   fontSize: 14,
-                                                  color: AppColors.eventText),
+                                                  color: AppColors.grey),
                                             ),
                                           )
                                         ],
@@ -212,11 +209,9 @@ class BookingTrack extends StatelessWidget {
                                         children: [
                                           Expanded(
                                             flex: 2,
-                                            child: Container(
-                                              child: SvgPicture.asset(
-                                                AppIcons.transportType,
-                                                height: 20,
-                                              ),
+                                            child: SvgPicture.asset(
+                                              AppIcons.transportType,
+                                              height: 20,
                                             ),
                                           ),
                                           const SizedBox(
@@ -225,10 +220,10 @@ class BookingTrack extends StatelessWidget {
                                           Expanded(
                                               flex: 13,
                                               child: Text(transportType!,
-                                                  style: TextStyle(
+                                                  style: const TextStyle(
                                                       fontSize: 14,
                                                       color:
-                                                          AppColors.eventText)))
+                                                          AppColors.grey)))
                                         ],
                                       )
                                     ],
@@ -236,10 +231,6 @@ class BookingTrack extends StatelessWidget {
                                 ),
                               ],
                             ),
-
-                            // location
-
-                            // buttons
                             const SizedBox(
                               height: 8,
                             ),
@@ -250,17 +241,15 @@ class BookingTrack extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 10,),
+              const SizedBox(height: 10,),
               Padding(
                 padding:  EdgeInsets.symmetric(horizontal: 10.0.w),
                 child: Text("Detail Status",textAlign:TextAlign.start,style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500,fontSize: 18.sp),),
               ),
-              SizedBox(height: 10,),
+              const SizedBox(height: 10,),
               ListView(
                 shrinkWrap: true,
                 primary: false,
-                // padding:
-                // EdgeInsets.symmetric(horizontal: 2.5.h, vertical: 5.0.h),
                 children: [
                   const OrderStatusBox(
                     orderStatus: false,
@@ -273,67 +262,67 @@ class BookingTrack extends StatelessWidget {
                         isPassed: false,),
                   ),
                   Transform.translate(
-                    offset: const Offset(0.0,-40),child:OrderStatusBox(
+                    offset: const Offset(0.0,-40),child:const OrderStatusBox(
                     orderStatus: false,
                     orderStatusTitle: 'Delivered',
                     orderStatusDescription: 'Nov 7, 2023 - 04:30',
                   ),
                   ),
                   Transform.translate(
-                    offset: const Offset(0.0,-60),child:OrderTrackingDots(
+                    offset: const Offset(0.0,-60),child:const OrderTrackingDots(
                     isPassed: true,
                   ),
                   ),
                   Transform.translate(
-                    offset: const Offset(0.0,-80),child:OrderStatusBox(
+                    offset: const Offset(0.0,-80),child:const OrderStatusBox(
                     orderStatus: true,
                     orderStatusTitle: "Reached to drop off",
                     orderStatusDescription: 'Nov 7, 2023 - 04:30, DPEC',
                   ),
                   ),
                   Transform.translate(
-                    offset: const Offset(0.0,-100),child: OrderTrackingDots(
+                    offset: const Offset(0.0,-100),child: const OrderTrackingDots(
                     isPassed: true,
                   ),
                   ),
                   Transform.translate(
-                    offset: const Offset(0.0,-120),child:OrderStatusBox(
+                    offset: const Offset(0.0,-120),child:const OrderStatusBox(
                     orderStatus: true,
                     orderStatusTitle: 'On the route ',
                     orderStatusDescription: 'Nov 7, 2023 - 04:30',
                   ),
                   ),
                   Transform.translate(
-                    offset: const Offset(0.0,-140),child: OrderTrackingDots(
+                    offset: const Offset(0.0,-140),child: const OrderTrackingDots(
                     isPassed: true,
                   ),
                   ),
                   Transform.translate(
-                    offset: const Offset(0.0,-160),child:OrderStatusBox(
+                    offset: const Offset(0.0,-160),child:const OrderStatusBox(
                     orderStatus: true,
                     orderStatusTitle: 'Loading',
                     orderStatusDescription: 'Nov 7, 2023 - 04:30, SERC',
                   ),
                   ),
                   Transform.translate(
-                    offset: const Offset(0.0,-180),child: OrderTrackingDots(
+                    offset: const Offset(0.0,-180),child: const OrderTrackingDots(
                     isPassed: true,
                   ),
                   ),
                   Transform.translate(
-                    offset: const Offset(0.0,-200),child:OrderStatusBox(
+                    offset: const Offset(0.0,-200),child:const OrderStatusBox(
                     orderStatus: true,
                     orderStatusTitle: 'Waiting at your location ',
                     orderStatusDescription: 'Nov 7, 2023 - 04:30, SERC',
                   ),
                   ),
                   Transform.translate(
-                    offset: const Offset(0.0,-220),child: OrderTrackingDots(
+                    offset: const Offset(0.0,-220),child: const OrderTrackingDots(
                     isPassed: true,
                   ),
                   ),
                   Transform.translate(
-                    offset: const Offset(0.0,-240),child:OrderStatusBox(
+                    offset: const Offset(0.0,-240),child:const OrderStatusBox(
                     orderStatus: true,
                     orderStatusTitle: 'On the route',
                     orderStatusDescription: 'Nov 7, 2023 - 04:30',

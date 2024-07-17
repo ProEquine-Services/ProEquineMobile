@@ -13,6 +13,15 @@ class RefreshError extends SplashState {
   RefreshError({this.message});
 }
 
+class GetEnvSuccessfully extends SplashState {
+  final EnvResponseModel? responseModel;
+  GetEnvSuccessfully({this.responseModel});
+}
+class GetEnvError extends SplashState {
+  final String? message;
+  GetEnvError({this.message});
+}
+
 
 // class VersionSuccessful extends SplashState{
 //   final VersionResponseModel versionModel;

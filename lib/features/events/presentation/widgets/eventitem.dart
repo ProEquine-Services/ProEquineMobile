@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:proequine/core/constants/colors/app_colors.dart';
 import 'package:proequine/core/constants/images/app_images.dart';
-import 'package:sizer/sizer.dart';
-
-import '../../../../core/constants/icons/icons.dart';
 
 class EventItem extends StatelessWidget {
   final String imgUrl;
@@ -34,8 +31,8 @@ class EventItem extends StatelessWidget {
             child: ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
-                  color: Color.fromRGBO(0, 0, 0, 0.8),
+                  padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+                  color: const Color.fromRGBO(0, 0, 0, 0.8),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -86,7 +83,7 @@ class EventItem extends StatelessWidget {
                             children: [
 
 
-                          SvgPicture.asset(AppIcons.calendar),
+                          SvgPicture.asset(AppIcons.date,color: AppColors.gold,),
                           Text(
                             date,
                             style: const TextStyle(

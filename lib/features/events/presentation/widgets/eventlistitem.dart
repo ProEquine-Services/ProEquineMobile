@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:proequine/core/constants/colors/app_colors.dart';
 import 'package:proequine/core/constants/images/app_images.dart';
 import 'package:sizer/sizer.dart';
-
-import '../../../../core/constants/icons/icons.dart';
 
 class EventListItem extends StatelessWidget {
   final String? imageUrl;
@@ -11,11 +10,11 @@ class EventListItem extends StatelessWidget {
   final String? eventTitle;
   final String? date;
 
-  EventListItem({this.imageUrl, this.description, this.eventTitle, this.date});
+  const EventListItem({super.key, this.imageUrl, this.description, this.eventTitle, this.date});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       /// this height calculated by figma
       height: 13.0.h,
 
@@ -47,11 +46,12 @@ class EventListItem extends StatelessWidget {
                     fontWeight: FontWeight.w400,
                   ),
                 ),
-                Spacer(flex: 1,),
+                const Spacer(flex: 1,),
                 Row(
                   children: [
                     SvgPicture.asset(
-                      AppIcons.calendar,
+                      AppIcons.date,
+                      color: AppColors.gold,
                     ),
                     const SizedBox(
                       width: 5,
@@ -62,11 +62,12 @@ class EventListItem extends StatelessWidget {
                     ),
                   ],
                 ),
-              Spacer(flex: 1,),
+              const Spacer(flex: 1,),
                 Row(
                   children: [
                     SvgPicture.asset(
-                      AppIcons.calendar,
+                      AppIcons.date,
+                      color: AppColors.gold,
                     ),
                     const SizedBox(
                       width: 5,

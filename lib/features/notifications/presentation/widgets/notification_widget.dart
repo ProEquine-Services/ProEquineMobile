@@ -1,181 +1,124 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:proequine/core/constants/colors/app_colors.dart';
-
-import 'package:sizer/sizer.dart';
+import 'package:proequine/core/constants/thems/app_styles.dart';
+import '../../../../core/constants/colors/app_colors.dart';
+import '../../../../core/constants/images/app_images.dart';
+import '../../../../core/utils/sharedpreferences/SharedPreferencesHelper.dart';
 
 class NotificationWidget extends StatelessWidget {
-  String? statusImage;
-  String? bookingTypeText;
-  String? image;
-  String? title;
-  String? date;
-  String? transport;
-  bool review;
+  final String? type;
+  final String? title;
+  final String? content;
+  final String? date;
 
-  NotificationWidget(
-      {super.key,
-      this.review = false,
-      this.bookingTypeText,
-      this.date,
-      this.transport,
-      this.title,
-      this.image,
-      this.statusImage});
+  const NotificationWidget({
+    super.key,
+    this.type,
+    this.title,
+    this.content,
+    this.date,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
-      decoration: BoxDecoration(
-        color: Color.fromRGBO(25, 25, 25, 1),
-        borderRadius: BorderRadius.circular(8),
+    String formatDateDifference(DateTime dateTime) {
+      Duration difference = DateTime.now().difference(dateTime);
+
+      if (difference.inDays > 1) {
+        return '${difference.inDays} days ago';
+      } else if (difference.inDays == 1) {
+        return '${difference.inDays} day ago';
+      } else if (difference.inHours > 1) {
+        return '${difference.inHours} hours ago';
+      } else if (difference.inHours == 1) {
+        return '${difference.inHours} hour ago';
+      } else if (difference.inMinutes > 0) {
+        return '${difference.inMinutes} min ago';
+      } else {
+        return 'just now';
+      }
+    }
+
+    String returnedIcon() {
+      if (type == 'HorseDocumentsApproval' ||
+          type == 'HorseAssociation' ||
+          type == 'SupportRequestAvailable' ||
+          type == 'ShippingJobActive' ||
+          type == 'TransportJobActive') {
+        return AppIcons.infoNotification;
+      } else if (type == 'HorseDocumentsRejection' ||
+          type == 'HorseAssociationReject' ||
+          type == 'ServiceRequestRejection' ||
+          type == 'ShippingJobRejected' ||
+          type == 'TransportJobRejected') {
+        return AppIcons.errorNotification;
+      }
+      return AppIcons.checkNotification;
+    }
+
+    DateTime dateTime = DateTime.parse(date!);
+    String formattedDate = formatDateDifference(dateTime);
+    return Card(
+      margin: EdgeInsets.zero,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              SvgPicture.asset(statusImage!),
-              const SizedBox(
-                width: 5,
-              ),
-              Text(
-                bookingTypeText!,
-                style: const TextStyle(
-                  color: AppColors.textColor,
-                  fontFamily: 'notosan',
-                  fontSize: 12,
-                  fontWeight: FontWeight.w700,
+      color: AppSharedPreferences.getTheme == 'ThemeCubitMode.dark'
+          ? const Color.fromRGBO(12, 12, 12, 1)
+          : Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.all(15),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                SvgPicture.asset(returnedIcon()),
+                const SizedBox(
+                  width: 6,
                 ),
-              ),
-              const SizedBox(
-                width: 5,
-              ),
-              Text(
-                "LT9664",
-                style: const TextStyle(
-                  color: AppColors.altTextColor2,
-                  fontFamily: 'notosan',
-                  fontSize: 12,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              Spacer(),
-              Text(
-                "10 min ago",
-                style: const TextStyle(
-                  color: AppColors.altTextColor2,
-                  fontFamily: 'notosan',
-                  fontSize: 12,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 8,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const SizedBox(
-                width: 8,
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Container(
-                    width: 30.0.w,
-                    child: Text(
-                      title!,
-                      textAlign: TextAlign.left,
-                      style: const TextStyle(
-                          color: AppColors.titleColor,
-                          fontSize: 14,
-                          fontFamily: 'notosan',
-                          fontWeight: FontWeight.w500),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 3,
-                  ),
-                  Container(
-                    width: 30.0.w,
-                    child: Text(
-                      date!,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                          color: AppColors.formsHintFont,
-                          fontSize: 12,
-                          fontFamily: 'notosan',
-                          fontWeight: FontWeight.w400),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 3,
-                  ),
-                  SizedBox(
-                    width: 30.0.w,
-                    child: Text(
-                      transport!,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                          color: AppColors.formsHintFont,
-                          fontSize: 12,
-                          fontFamily: 'notosan',
-                          fontWeight: FontWeight.w400),
-                    ),
-                  ),
-                ],
-              ),
-              Spacer(),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(
-                    height: 50,
-                  ),
-                  // Visibility(
-                  //   visible: review,
-                  //   child: Container(
-                  //     height: 5.0.h,
-                  //     width: 20.w,
-                  //     decoration: BoxDecoration(
-                  //       color: AppColors.notificationReview,
-                  //       borderRadius: BorderRadius.circular(76),
-                  //     ),
-                  //     child: const Center(
-                  //       child: Text(
-                  //         "Review",
-                  //         style: TextStyle(
-                  //             color: AppColors.white,
-                  //             fontWeight: FontWeight.w400,
-                  //             fontSize: 12,
-                  //             fontFamily: 'notosan'),
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
-                  const SizedBox(
-                    height: 8,
-                  ),
-                ],
-              ),
-              Container(
-                height: 9.0.h,
-                width: 25.0.w,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  image: DecorationImage(
-                    image: AssetImage(image!),
-                    fit: BoxFit.fill,
+                Text(
+                  title!,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: AppColors.backgroundColor,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
-              ),
-            ],
-          ),
-        ],
+                const Spacer(),
+                Text(
+                  formattedDate,
+                  style: AppStyles.bookingContent,
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Row(
+              children: [
+                Container(
+                  height: 14,
+                  width: 14,
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.transparent,
+                  ),
+                ),
+                const SizedBox(
+                  width: 6,
+                ),
+                Expanded(
+                  child: Text(
+                    content!,
+                    style: AppStyles.bookingContent,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

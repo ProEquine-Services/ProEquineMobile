@@ -5,9 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:proequine/core/constants/images/app_images.dart';
 import 'package:proequine/features/events/presentation/widgets/all_events_list.dart';
 import 'package:sizer/sizer.dart';
-
-import '../../../../core/widgets/titlebar.dart';
-import '../../../profile/presentation/screens/user_profile.dart';
+import '../../../manage_account/presentation/screens/user_profile.dart';
 import '../widgets/eventitem.dart';
 
 class EventListMain extends StatelessWidget {
@@ -43,7 +41,7 @@ class EventListMain extends StatelessWidget {
                       ),
                     ),
                     GestureDetector(
-                      child: SvgPicture.asset(AppIcons.userSquare,height: 40,width: 40,),
+                      child: SvgPicture.asset(AppIcons.userSquare,height: 32,width: 32,),
                       onTap: () {
                         Navigator.push(
                           context,

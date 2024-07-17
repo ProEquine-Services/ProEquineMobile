@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
 
 import '../constants/colors/app_colors.dart';
+import '../utils/sharedpreferences/SharedPreferencesHelper.dart';
 
 class LoadingCircularWidget extends StatelessWidget {
-  bool isLogout = false;
-
-  LoadingCircularWidget({this.isLogout = false});
+  final bool isDeleteButton;
+  const LoadingCircularWidget({super.key,this.isDeleteButton=false});
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return  Center(
       child: CircularProgressIndicator(
-        backgroundColor: isLogout ? const Color(0xFFc43221) : AppColors.white,
-        valueColor: isLogout
-            ? AlwaysStoppedAnimation<Color>(
-                const Color(0xFFc43221).withOpacity(0.06))
-            : const AlwaysStoppedAnimation<Color>(Colors.grey),
+        backgroundColor:isDeleteButton
+            ? AppColors.red
+            : AppColors.yellow,
+        valueColor:  AlwaysStoppedAnimation<Color>(isDeleteButton?AppColors.red:AppColors.gold),
       ),
     );
   }

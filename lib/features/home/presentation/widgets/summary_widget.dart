@@ -1,133 +1,158 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:proequine/core/constants/colors/app_colors.dart';
-import 'package:proequine/core/constants/images/app_images.dart';
+import 'package:intl/intl.dart';
 import 'package:proequine/core/constants/thems/app_styles.dart';
-import 'package:proequine/core/widgets/rebi_button.dart';
 
-class SummaryBoxWidget extends StatelessWidget {
+import '../../../../core/widgets/divider.dart';
+import '../../../transports/data/create_transport_response_model.dart';
+
+class SummaryBoxWidget extends StatefulWidget {
+  final TransportModel? tripServiceDataModel;
+
+  const SummaryBoxWidget({super.key, required this.tripServiceDataModel});
+
+  @override
+  State<SummaryBoxWidget> createState() => _SummaryBoxWidgetState();
+}
+
+class _SummaryBoxWidgetState extends State<SummaryBoxWidget> {
+  String returnDate() {
+    if (widget.tripServiceDataModel!.type == "Other day return" &&
+        widget.tripServiceDataModel!.returnTime!.isNotEmpty) {
+      return "Returning: ${widget.tripServiceDataModel!.returnDate} • ${widget.tripServiceDataModel!.returnTime}";
+    } else if (widget.tripServiceDataModel!.type == "Same day return" &&
+        widget.tripServiceDataModel!.returnTime!.isNotEmpty) {
+      return "Returning:  ${widget.tripServiceDataModel!.pickUpDate} • ${widget.tripServiceDataModel!.pickUpTime}";
+    } else {
+      return "";
+    }
+  }
+
+  String formatDate(DateTime date) {
+    // Define the date format
+    final dateFormat = DateFormat("MMMM d, yyyy");
+    // Format the date
+    final formattedDate = dateFormat.format(date);
+    return formattedDate;
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        color: Color(0xff191919),
-        borderRadius: BorderRadius.circular(8),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      decoration: ShapeDecoration(
+        color: Colors.white,
+        shape: RoundedRectangleBorder(
+          side: const BorderSide(width: 0.50, color: Color(0xFFDFD9C9)),
+          borderRadius: BorderRadius.circular(8),
+        ),
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 14,vertical:11 ),
+        padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 19),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              "Service & Return type",
-              style: AppStyles.summaryTitleStyle,
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            const Text(
-              "Event transport",
-              style: AppStyles.summaryDesStyle,
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            const Text(
-              "Date & Time",
-              style: AppStyles.summaryTitleStyle,
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            const Text(
-              "15 Sep • 04:30 pm",
-              style: AppStyles.summaryDesStyle,
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            const Text(
-              "Location",
-              style: AppStyles.summaryTitleStyle,
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            Row(
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SvgPicture.asset(AppIcons.arrows),
-                const SizedBox(
-                  width: 2,
+                Text(
+                  "Service",
+                  style: AppStyles.summaryTitleStyle,
                 ),
-                const Text(
-                  "DEC",
+                const SizedBox(
+                  height: 5,
+                ),
+                Text(
+                  "${formatDate(DateTime.parse(widget.tripServiceDataModel!.pickUpDate!))} • ${widget.tripServiceDataModel!.pickUpTime}",
                   style: AppStyles.summaryDesStyle,
                 ),
-                const SizedBox(
-                  width: 2,
+                Text(
+                  widget.tripServiceDataModel!.type!,
+                  style: AppStyles.summaryDesStyle,
                 ),
-                SvgPicture.asset(AppIcons.location2),
               ],
             ),
-            const SizedBox(
-              height: 15,
+            const CustomDivider(),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Pick up",
+                  style: AppStyles.summaryTitleStyle,
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                Text(
+                  widget.tripServiceDataModel!.pickPlace?.name.toString()??'',
+                  style: AppStyles.summaryDesStyle,
+                ),
+                Text(
+                  "${widget.tripServiceDataModel!.pickUpContactName} • ${widget.tripServiceDataModel!.pickUpPhoneNumber}",
+                  style: AppStyles.summaryDesStyle,
+                ),
+              ],
             ),
-            const Text(
-              "Horses",
-              style: AppStyles.summaryTitleStyle,
+            const CustomDivider(),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Drop off",
+                  style: AppStyles.summaryTitleStyle,
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                Text(
+                  widget.tripServiceDataModel!.dropPlace?.name.toString()??'',
+                  style: AppStyles.summaryDesStyle,
+                ),
+                Text(
+                  "${widget.tripServiceDataModel!.dropContactName} • ${widget.tripServiceDataModel!.dropPhoneNumber}",
+                  style: AppStyles.summaryDesStyle,
+                ),
+              ],
             ),
-            const SizedBox(
-              height: 5,
+            const CustomDivider(),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Horses",
+                  style: AppStyles.summaryTitleStyle,
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                Text(
+                  widget.tripServiceDataModel!.numberOfHorses.toString(),
+                  style: AppStyles.summaryDesStyle,
+                ),
+              ],
             ),
-            const Text(
-              "4 Horses",
-              style: AppStyles.summaryDesStyle,
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            const Text(
-              "Contact Person",
-              style: AppStyles.summaryTitleStyle,
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            const Text(
-              "+971 57 865 9658",
-              style: AppStyles.summaryDesStyle,
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            const Text(
-              "Comments",
-              style: AppStyles.summaryTitleStyle,
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            const Text(
-              "Lorem Ipsum , is simply dummy text.",
-              style: AppStyles.summaryDesStyle,
-            ),
-            const SizedBox(
-              height: 17,
-            ),
-            RebiButton(
-              height: 40,
-              onPressed: () {},
-              child:  Text(
-                "Edit",
-                style: TextStyle(
-                    color: AppColors.white,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 14,
-                    fontFamily: 'notosan'),
-              ),
-              backgroundColor: Color(0xff303030),
-            ),
-            // SizedBox(height: 12,)
+            widget.tripServiceDataModel!.notes != null
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const CustomDivider(),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Notes",
+                            style: AppStyles.summaryTitleStyle,
+                          ),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            widget.tripServiceDataModel!.notes!,
+                            style: AppStyles.summaryDesStyle,
+                          ),
+                        ],
+                      ),
+                    ],
+                  )
+                : const SizedBox()
           ],
         ),
       ),

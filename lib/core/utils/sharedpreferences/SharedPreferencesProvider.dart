@@ -21,11 +21,6 @@ class SharedPreferencesProvider
   {
     // _init(  ) ;
   }
-  _init(  ) async {
-    sharedPreferences = await SharedPreferences.getInstance();
-  }
-
-
  String? read(String? key) {
     return contains(key!)? json.decode(sharedPreferences?.getString(key) as String):'';
   }

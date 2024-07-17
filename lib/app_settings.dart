@@ -1,4 +1,4 @@
 class AppSettings {
-  static const String baseUrl = 'https://proequine-webapi-test.azurewebsites.net';
-  static const String version = '1.0.0:1';
+  static String baseUrl ='https://api.proequine.io';
+  static const String version = '1.0.0.6';
 }

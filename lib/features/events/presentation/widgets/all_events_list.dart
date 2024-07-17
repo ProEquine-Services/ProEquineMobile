@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:proequine/app_settings.dart';
+
 import 'package:proequine/core/widgets/loading_widget.dart';
 import 'package:proequine/features/events/domain/event_cubit.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -62,7 +62,7 @@ class AllEventsScreenState extends State<AllEventsScreen> {
               RebiMessage(msg: state.message!);
             } else if (state is AllEventsLoading) {
               // return const GridLoadingShimmer();
-              return LoadingCircularWidget();
+              return const LoadingCircularWidget();
             } else if (state is AllEventsSuccessful) {
               if (state.events!.isEmpty) {
                 return const SizedBox.shrink();
@@ -143,7 +143,7 @@ class AllEventsScreenState extends State<AllEventsScreen> {
                  events[index].eventImage??'https://proequineimagestore.blob.core.windows.net/proequineimages/Testing8',
               eventTitle: events[index].eventTitle??'',
               //Todo add location here instead of time (Apis)
-              date: events[index].eventDate!.substring(0,10)??'',
+              date: events[index].eventDate!.substring(0,10),
             ));
       },
     );

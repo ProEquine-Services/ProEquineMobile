@@ -1,38 +1,53 @@
-import 'dart:io';
-
-import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:proequine/core/utils/extensions.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:proequine/features/splash/data/env_response_model.dart';
 import 'package:proequine/features/splash/domain/repo/splash_repo.dart';
-import 'package:sizer/sizer.dart';
-import 'package:bloc/bloc.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:meta/meta.dart';
-import '../../../core/constants/colors/app_colors.dart';
+import 'package:proequine/features/user/data/register_response_model.dart';
+
+import '../../../core/CoreModels/base_response_model.dart';
+import '../../../core/errors/base_error.dart';
 import '../../../core/utils/printer.dart';
-import '../../../core/utils/sharedpreferences/SharedPreferencesHelper.dart';
-import '../data/refresh_request_model.dart';
-import '../data/refresh_token_response.dart';
+import '../../../core/utils/secure_storage/secure_storage_helper.dart';
 
 
 part 'splash_state.dart';
 
 class SplashCubit extends Cubit<SplashState> {
   SplashCubit() : super(SplashInitial());
+  String? envUrl;
 
-
-
-  Future<void> refreshToken(RefreshRequestModel requestModel) async {
-    var response = await SplashRepository.refreshToken(requestModel);
-    if (response is RefreshTokenResponse) {
-      AppSharedPreferences.accessToken = response.accessToken!;
-      AppSharedPreferences.refreshToken = response.refreshToken!.token!;
-      AppSharedPreferences.userId = response.refreshToken!.userId!;
+  Future<void> refreshToken(String refreshToken) async {
+    var response = await SplashRepository.refreshToken(refreshToken);
+    if (response is RegisterResponseModel) {
+      await SecureStorage().setRefreshToken(response.refreshToken!);
+      await SecureStorage().setToken(response.accessToken!);
+      await SecureStorage().setUserId(response.id.toString());
       if (response is RefreshSuccessfully) {
+        Print(response);
+      } else if (response is BaseError) {
+        Print(response);
+      } else if (response is Message) {
         Print(response);
       }
     }
   }
+
+// Future<void> getEnv(String buildNumber) async {
+//   var response = await SplashRepository.getTheEnvironment(buildNumber);
+//   if (response is EnvResponseModel) {
+//     await SecureStorage().setUrl(response.environmentURL!);
+//     AppSharedPreferences.setEnvType=response.environmentURL!;
+//     Print('AppSharedPreferences.getEnvType${SecureStorage().getUrl()}');
+//     envUrl = response.environmentURL!;
+//     if (response is BaseError) {
+//       Print(response);
+//     } else if (response is Message) {
+//       Print(response);
+//     }
+//   }
+// }
 // Future<void> getVersion()async{
 //   var response= await SplashRepository.versionModel();
 //   print('this is response for all getVersion');
@@ -46,5 +61,4 @@ class SplashCubit extends Cubit<SplashState> {
 //     emit(VersionError(message: response.content));
 //   }
 // }
-
 }

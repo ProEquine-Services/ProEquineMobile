@@ -5,16 +5,27 @@ import 'package:proequine/core/utils/extensions.dart';
 import 'package:proequine/features/user/presentation/screens/verify_phone_screen.dart';
 import '../../../../core/constants/colors/app_colors.dart';
 import '../../../../core/utils/validator.dart';
-import '../../../../core/widgets/custom_logo_widget.dart';
+import '../../../../core/widgets/password_input_field_widget.dart';
 import '../../../../core/widgets/rebi_button.dart';
 import '../../../../core/widgets/rebi_input.dart';
 import '../widgets/register_header.dart';
 
 class SignUpScreen extends StatefulWidget {
-  String? dob;
-  String? name;
+  final String? dob;
+  final String? firstName;
+  final String? middleName;
+  final String? lastName;
+  final String? gender;
+  final String? nationality;
 
-  SignUpScreen({super.key, this.dob, this.name});
+  const SignUpScreen(
+      {super.key,
+      this.dob,
+      this.firstName,
+      this.middleName,
+      this.lastName,
+      this.gender,
+      this.nationality});
 
   @override
   State<SignUpScreen> createState() => _SignUpScreenState();
@@ -52,6 +63,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           builder: (context, constraint) {
             return Form(
               key: _formKey,
+              autovalidateMode: AutovalidateMode.disabled,
               child: SingleChildScrollView(
                 child: ConstrainedBox(
                   constraints: BoxConstraints(minHeight: constraint.maxHeight),
@@ -59,8 +71,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     child: Column(
                       children: [
                         RegistrationHeader(isThereBackButton: true),
-                        const CustomLogoWidget(),
-                        Spacer(),
+                        const Spacer(
+                          flex: 3,
+                        ),
+                        const SizedBox(
+                          height: 35,
+                        ),
                         Padding(
                           padding:
                               const EdgeInsets.symmetric(horizontal: kPadding),
@@ -68,16 +84,25 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             children: [
                               Align(
                                 alignment: Alignment.centerLeft,
-                                child: Text("Enter Email & Password",
-                                    style: AppStyles.registrationTitle),
+                                child: Text("Enter your email",
+                                    style: AppStyles.mainTitle),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                    "For account verification and receive timely notifications this helps us",
+                                    style: AppStyles.descriptions),
                               ),
                               Padding(
                                 padding:
-                                    const EdgeInsets.symmetric(vertical: 10),
+                                    const EdgeInsets.symmetric(vertical: 7),
                                 child: RebiInput(
                                   hintText: 'Email'.tra,
                                   controller: _email,
-                                  keyboardType: TextInputType.emailAddress,
+                                  keyboardType: TextInputType.text,
                                   textInputAction: TextInputAction.done,
                                   autoValidateMode:
                                       AutovalidateMode.onUserInteraction,
@@ -93,64 +118,30 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   },
                                 ),
                               ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 10),
-                                child: RebiInput(
-                                  hintText: 'Password'.tra,
-                                  controller: _password,
-                                  keyboardType: TextInputType.visiblePassword,
-                                  textInputAction: TextInputAction.done,
-                                  autoValidateMode:
-                                      AutovalidateMode.onUserInteraction,
-                                  isOptional: false,
-                                  color: AppColors.formsLabel,
-                                  readOnly: false,
-                                  contentPadding: const EdgeInsets.symmetric(
-                                      horizontal: 20, vertical: 13),
-                                  obscureText: true,
-                                  validator: (value) {
-                                    return Validator.passwordValidator(
-                                        _password.text);
-                                  },
-                                ),
+                              const SizedBox(
+                                height: 24,
                               ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 10),
-                                child: RebiInput(
-                                  hintText: 'Confirm password'.tra,
-                                  controller: _confirmPassword,
-                                  scrollPadding: EdgeInsets.only(bottom: 100),
-                                  keyboardType: TextInputType.visiblePassword,
-                                  textInputAction: TextInputAction.done,
-                                  autoValidateMode:
-                                      AutovalidateMode.onUserInteraction,
-                                  isOptional: false,
-                                  color: AppColors.formsLabel,
-                                  readOnly: false,
-                                  contentPadding: const EdgeInsets.symmetric(
-                                      horizontal: 20, vertical: 13),
-                                  obscureText: true,
-                                  validator: (value) {
-                                    if (value != null && value.isEmpty) {
-                                      return "Please confirm your password".tra;
-                                    } else if (value != _password.text) {
-                                      return "password does not match".tra;
-                                    } else {
-                                      return null;
-                                    }
-                                  },
-                                ),
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text("Create your password",
+                                    style: AppStyles.mainTitle),
+                              ),
+                              const SizedBox(
+                                height: 14,
+                              ),
+                              PasswordInputFieldWidget(
+                                password: _password,
+                                confirmPassword: _confirmPassword,
                               ),
                             ],
                           ),
                         ),
+                        const SizedBox(
+                          height: 20,
+                        ),
                         Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: kPadding,
-                            vertical: kPadding
-                          ),
+                          padding:
+                              const EdgeInsets.symmetric(horizontal: kPadding),
                           child: RebiButton(
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
@@ -158,18 +149,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => VerifyPhoneScreen(
-                                              fullName: widget.name,
+                                              firstName: widget.firstName,
+                                              middleName: widget.middleName,
+                                              lastName: widget.lastName,
                                               dob: widget.dob,
                                               password: _password.text,
                                               email: _email.text,
+                                              confirmPassword:
+                                                  _confirmPassword.text,
+                                              gender: widget.gender,
+                                              nationality: widget.nationality,
                                             )));
                               } else {}
                             },
-                            child: const Text("Continue"),
+                            child:  Text("Continue", style: AppStyles.buttonStyle,),
                           ),
                         ),
                         const SizedBox(
-                          height: 40,
+                          height: 20,
                         ),
                       ],
                     ),

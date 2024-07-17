@@ -1,6 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
+
+import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_store.dart';
+import 'package:proequine/core/http/path_provider.dart';
+
 import '../CoreModels/base_response_model.dart';
 import '../CoreModels/base_result_model.dart';
 import '../constants/constants.dart';
@@ -26,26 +31,48 @@ class ApiProvider {
       required String method,
       required String url,
       Map<String, dynamic>? data,
+      CachePolicy policy = CachePolicy.refreshForceCache,
+      Duration refreshDuration = const Duration(minutes:1 ),
       Map<String, String>? headers,
       Map<String, dynamic>? queryParameters,
       Map<String, String>? files,
       CancelToken? cancelToken,
       bool isLongTime = false}) async {
-/// Edited Here
+    /// Edited Here
     var baseOptions = BaseOptions(
-      connectTimeout: isLongTime? 30 *1000 : 15 *1000,
+      connectTimeout: isLongTime ? const Duration(milliseconds: 30 * 1000) : const Duration(milliseconds: 15 * 1000),
     );
+    var dio = Dio();
+
+    var cacheStore = HiveCacheStore(AppPathProvider.path);
+    var cacheInterceptor = DioCacheInterceptor(
+      options: CacheOptions(
+        store: cacheStore,
+
+        policy: policy,
+        hitCacheOnErrorExcept: [401, 403, 302],
+        maxStale: refreshDuration,
+        priority: CachePriority.normal,
+        cipher: null,
+        keyBuilder: CacheOptions.defaultCacheKeyBuilder,
+        allowPostMethod: true,
+      ),
+    );
+
+    dio.interceptors.add(cacheInterceptor);
 
     Options options = Options(
       headers: headers,
       method: method,
       contentType: Headers.jsonContentType,
-      receiveTimeout: 60*1000, // 60 seconds
-      sendTimeout: 60*1000,
+      receiveTimeout: const Duration(milliseconds:60 * 1000 ),
+      // 60 seconds
+      sendTimeout: const Duration(milliseconds:60 * 1000 ),
     );
 
     if (files != null) {
       headers?.remove(HEADER_CONTENT_TYPE);
+
       ///Edited
       data ??= {};
 
@@ -55,15 +82,21 @@ class ApiProvider {
         }
       });
     }
+
     try {
       Response response;
-      response = await Dio(baseOptions).request(url,
+      response = await dio.request(url,
           queryParameters: queryParameters,
           options: options,
           cancelToken: cancelToken,
-
           data: files != null ? FormData.fromMap(data!) : data);
       // Get the decoded json
+      if (response.extra['isCached'] == true) {
+        print('Data is coming from cache');
+      } else {
+        print('Data is coming from server');
+      }
+
       var decodedJson;
 
       if (response.data is String) {
@@ -77,12 +110,18 @@ class ApiProvider {
       }
 
       Print(decodedJson);
+      if (response.extra.containsKey('dio_cache_source') &&
+          response.extra['dio_cache_source'] == 'CACHE') {
+        Print('Data retrieved from cache');
+      } else {
+        Print('Data retrieved from the network');
+      }
 
       return BaseResponseModel.fromJson(json: decodedJson, fromJson: converter);
     }
 
     // Handling errors
-    on DioError catch (e, s) {
+    on DioException catch (e, s) {
       Print('catch DioError ');
       Print(e);
 
@@ -93,19 +132,8 @@ class ApiProvider {
       Print('DioErrorDioErrorDioError $error');
       if (e.response != null) if (e.response?.data !=
           null) if (!(e.response?.data is String)) {
-        //TODO error 405 //TODO yes
-        //TODO error 401
-        //TODO test successful == true and false
-
         Print(e.response?.data);
         json = e.response?.data;
-        // if(error is HttpMethodUnCorrect) {
-        //   json = {"":""};
-        //   }else if(error is InternalServerError){
-        //   json = {"":""};
-        // }else{
-        //   json =e.response.data;
-        // }
       }
 
       return BaseResponseModel.fromJson(json: json, error: error);
@@ -123,12 +151,12 @@ class ApiProvider {
     }
   }
 
-  static BaseError _handleDioError(DioError error) {
+  static BaseError _handleDioError(DioException error) {
     Print('error.type = ${(error.type)}');
-    if (error.type == DioErrorType.other ||
-        error.type == DioErrorType.response) {
+    if (error.type == DioExceptionType.badResponse ||
+        error.type == DioExceptionType.connectionError) {
       if (error is SocketException) return SocketError();
-      if (error.type == DioErrorType.response) {
+      if (error.type == DioExceptionType.badResponse) {
         switch (error.response?.statusCode) {
           case 400:
             return BadRequestError();
@@ -150,11 +178,11 @@ class ApiProvider {
         }
       }
       return NetError();
-    } else if (error.type == DioErrorType.connectTimeout ||
-        error.type == DioErrorType.sendTimeout ||
-        error.type == DioErrorType.receiveTimeout) {
+    } else if (error.type == DioExceptionType.connectionTimeout ||
+        error.type == DioExceptionType.sendTimeout ||
+        error.type == DioExceptionType.receiveTimeout) {
       return TimeoutError();
-    } else if (error.type == DioErrorType.cancel) {
+    } else if (error.type == DioExceptionType.cancel) {
       return CancelError();
     } else {
       return UnknownError();
