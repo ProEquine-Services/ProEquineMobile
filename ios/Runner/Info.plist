@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleDisplayName</key>
+	<string>ProEquine Dev</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>proequine_dev</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>$(FLUTTER_BUILD_NAME)</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>LSMinimumSystemVersion</key>
+	<string>13.0.0</string>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+		<key>NSAllowsArbitraryLoadsInWebContent</key>
+		<true/>
+	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>We need access to your camera to scan your credit card information for secure payment processing and to take photos for your user profile and horse profile. This helps you quickly enter payment details and personalize your profiles with current images</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>ProEquine requires user's location for better user experience. </string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>ProEqunie requires user’s location for better user experience.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>ProEquine requires read and write access to the photo library.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>We need access to your photo library to let you upload profile pictures.</string>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+	</array>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
+	<key>UIMainStoryboardFile</key>
+	<string>Main</string>
+	<key>UIRequiresFullScreen</key>
+	<true/>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
+</dict>
+</plist>
